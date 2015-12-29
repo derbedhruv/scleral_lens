@@ -8,4 +8,7 @@ This project is all about estimation of scleral topography in four directions - 
 Our intention is to make a software frontend which would enable clinicians to estimate these values from images quickly. These will then be correlated to fitting parameters in the contant lens.
 
 ## To compile and run
-Run `g++ crop.cpp -o crop \`pkg-config opencv --cflags --libs\``
+Run 
+```
+`g++ crop.cpp -o crop `pkg-config opencv --cflags --libs`
+```
