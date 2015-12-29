@@ -47,17 +47,19 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 
 } 
 
-int main()
-{
+int main() {
 	
-	img = imread("images/Tiff images/report.tiff", CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_COLOR);	//reading in the image
+	// reading in and displaying the image
+	img = imread("images/Tiff/report.tiff", CV_LOAD_IMAGE_ANYDEPTH | CV_LOAD_IMAGE_COLOR);
+
 	namedWindow("Image", CV_WINDOW_AUTOSIZE);
-	imshow("Image",img);
+
+	imshow("Image", img);
+
 	setMouseCallback("Image", CallBackFunc);	//this point will be used to get imput through mouse co-ordinated
 
-	while(char(waitKey(1)!='q')) 
-   	{
- 
+	while(char(waitKey(1)!='q')) {
+ 	  // do stuff and exit by pressing q
    	}
     
 	return 0;

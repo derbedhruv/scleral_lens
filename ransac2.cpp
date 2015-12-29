@@ -1,3 +1,9 @@
+/********************************************
+
+
+
+********************************************/
+
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <stdlib.h>
@@ -85,7 +91,7 @@ vector<Point2f> getPointPositions(Mat binaryImage)
 int main()
 {
    
-    Mat color = imread("images/Tiff images/img11.tiff");
+    Mat color = imread("images/Tiff/report.tiff");
     Mat gray;
     cvtColor(color, gray, CV_BGR2GRAY);
 
