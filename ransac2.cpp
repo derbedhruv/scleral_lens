@@ -91,10 +91,19 @@ vector<Point2f> getPointPositions(Mat binaryImage)
 int main()
 {
    
-    Mat color = imread("images/Tiff/report.tiff");
-    Mat gray;
-    cvtColor(color, gray, CV_BGR2GRAY);
+    Mat color = imread("images/Tiff/cropped_borders.tiff");
+    Mat gray, channels[3], bw;
+    split(color,channels);
+    //cvtColor(color, gray, CV_BGR2GRAY);
+    threshold(channels[1],bw,50,255,CV_THRESH_BINARY);
+    namedWindow("Channel",CV_WINDOW_NORMAL);
+    imshow("Channel",bw);
+    waitKey();
+    Mat mask = bw; //for the rest of the code
 
+/* This part is no longer needed, as we are directly thresholding on the 
+ * Middle channel
+ *
     // now map brightest pixel to 255 and smalles pixel val to 0. this is for easier finding of threshold
     double min, max;
     minMaxLoc(gray,&min,&max);
@@ -103,6 +112,7 @@ int main()
     Mat normalized = gray - sub;
     normalized = mult * normalized;
     imshow("normalized" , normalized);
+    waitKey();
     //--------------------------------
 
 
@@ -110,8 +120,10 @@ int main()
     Mat mask;
   
     threshold(normalized, mask, 100, 255, CV_THRESH_BINARY);
+    imshow("Threshed", mask);
+    waitKey();
 
-
+    */
 
     vector<Point2f> edgePositions;
     edgePositions = getPointPositions(mask);
@@ -179,4 +191,6 @@ int main()
         waitKey(0); //fr dispaly time.
 
         return 0;
-    }
+
+        
+}
