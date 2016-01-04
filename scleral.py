@@ -47,7 +47,7 @@ class scleralViewer(object):
 			y = (click_in_window_coords_x)/self.main_img.bbox.bounds[2]*self.img.shape[1]
 			x = (self.main_img.bbox.bounds[3] - click_in_window_coords_y)/self.main_img.bbox.bounds[3]*self.img.shape[0]
 			self.clickStack.append([x,y])
-			print [x,y]
+			print ">>>" + str([x,y])
 			if len(self.clickStack) == 5:
 				# Wait for 5 points are accumulated
 				circle = LSQ(np.matrix(self.clickStack),(0,0,1))
@@ -55,6 +55,6 @@ class scleralViewer(object):
 				self.clickStack = []
 		
 if __name__ == "__main__":
-	img = scipy.misc.imread('images/Tiff/test.tif')
+	img = scipy.misc.imread('images/Tiff/cropped2_borders.tiff')
 	s = scleralViewer(img,20,20)
 	plt.show()
