@@ -8,7 +8,7 @@ from scipy.optimize import fmin_bfgs as bgfs
 
 def LSQ(XY, initialGuess = None):
 	
-	Circle = namedtuple("Circle",["x","y","r"])
+	Circle = namedtuple("Circle",["x","y","r","error"])
 	
 	if initialGuess == None:	
 		V = np.matrix([random(), random(), random()])
@@ -31,4 +31,4 @@ def LSQ(XY, initialGuess = None):
 	
 	circ_msr = LSE_wrapper(XY)
 	result =  bgfs(circ_msr,V)
-	return Circle(result[0], result[1], result[2])
+	return Circle(result[0], result[1], result[2], sqrt(sqrt(circ_msr(result))/5))
