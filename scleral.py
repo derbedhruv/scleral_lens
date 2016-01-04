@@ -15,7 +15,7 @@ import scipy.misc
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Cursor, Button
-from lsq import LSqFitCircle
+from lsq import LSQ
 import math
 
 class scleralViewer(object):
@@ -47,13 +47,14 @@ class scleralViewer(object):
 			y = (click_in_window_coords_x)/self.main_img.bbox.bounds[2]*self.img.shape[1]
 			x = (self.main_img.bbox.bounds[3] - click_in_window_coords_y)/self.main_img.bbox.bounds[3]*self.img.shape[0]
 			self.clickStack.append([x,y])
+			print [x,y]
 			if len(self.clickStack) == 5:
 				# Wait for 5 points are accumulated
-				circle = LSqFitCircle(np.matrix(self.clickStack))
+				circle = LSQ(np.matrix(self.clickStack),(0,0,1))
 				print circle
 				self.clickStack = []
 		
 if __name__ == "__main__":
-	img = scipy.misc.imread('images/Tiff/cropped2_borders.tiff')
+	img = scipy.misc.imread('images/Tiff/test.tif')
 	s = scleralViewer(img,20,20)
 	plt.show()
