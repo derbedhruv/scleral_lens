@@ -14,6 +14,7 @@ import scipy as sc
 import scipy.misc
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 from matplotlib.widgets import Cursor, Button
 from lsq import LSQ
 import math
@@ -24,6 +25,7 @@ class scleralViewer(object):
 		self.frame_width = frame_width
 		self.frame_height = frame_height
 		self.fig = plt.figure()
+		self.ax = self.fig.gca()
 		self.img = img
 		self.main_img = plt.subplot2grid((6,5),(0,0),rowspan = 6,colspan = 5)
 		self.main_img.imshow(self.img,cmap = plt.cm.gray)
@@ -36,22 +38,37 @@ class scleralViewer(object):
 		self.lastclick_y = None
 		
 		self.clickStack = []
+	
+	def window2image_coords(self,winx,winy):
+		_x = winx - self.main_img.bbox.bounds[0]
+		_y = winy - self.main_img.bbox.bounds[1]
+		imgy = (_x)/self.main_img.bbox.bounds[2]*self.img.shape[1]
+		imgx = (self.main_img.bbox.bounds[3] - _y)/self.main_img.bbox.bounds[3]*self.img.shape[0]
+		return (imgx,imgy)
 		
+	def image2window_coords(self,imgx,imgy):
+		_y = -imgx*self.main_img.bbox.bounds[3]/self.img.shape[0] + self.main_img.bbox.bounds[3]
+		_x = imgy*self.main_img.bbox.bounds[3]/self.img.shape[0]
+		winx = _x + self.main_img.bbox.bounds[0]
+		winy = _y + self.main_img.bbox.bounds[1]
+		return (winx,winy)
+	
 	def onClick(self, event):
 		# Event has coordinate system with origin in the bottom left, y up and x right
 		# bbox.bounds = (lower left x,lower left y, width, height) of image
 		# image coordinate system has origin in upper right, x down, y to the right
 		if event.inaxes == self.main_img:
-			click_in_window_coords_x = event.x - self.main_img.bbox.bounds[0]
-			click_in_window_coords_y = event.y - self.main_img.bbox.bounds[1]
-			y = (click_in_window_coords_x)/self.main_img.bbox.bounds[2]*self.img.shape[1]
-			x = (self.main_img.bbox.bounds[3] - click_in_window_coords_y)/self.main_img.bbox.bounds[3]*self.img.shape[0]
+			(x,y) = self.window2image_coords(event.x,event.y)
 			self.clickStack.append([x,y])
 			print ">>>" + str([x,y])
 			if len(self.clickStack) == 5:
-				# Wait for 5 points are accumulated
+				# Wait for 5 points to be accumulated
 				circle = LSQ(np.matrix(self.clickStack),(0,0,1))
-				print circle
+				print "+++++++++++"
+				print "R = " + str(circle.r)
+				print "Error = " + str(circle.error)
+				print "+++++++++++"
+				#self.ax.add(plt.Circle(0,0))
 				self.clickStack = []
 		
 if __name__ == "__main__":
