@@ -20,19 +20,38 @@ red = all(cat(3,img(:,:,1)>180,img(:,:,2)<60,img(:,:,3)<60),3);
 % Remove non unique values for a particular column
 min_y = min(cols);
 max_y = max(cols);
+pts = zeros(max_y-min_y+1,2);
+count = 1;
 
 for i = min_y:max_y
-    
+    k = find(red(:,i));
+    if ~isempty(k)
+        idx = mean(k);
+        pts(count,1) = i;
+        pts(count,2) = idx;
+        count = count + 1;
+    end
 end
 
-% Fit a spline to red pixel curve
-%pp = spline(cols,rows);
+pts = pts(1:count,:);
 
-% Total hack, passing callback from image plot to obscured parent axes.
-ax_callback = @(h,e)(disp(e));
-set(ax,'ButtonDownFcn',ax_callback);
-set(ima,'ButtonDownFcn',@(h,e)(ax_callback(h,e)));
+% Fit a spline to red pixel curve
+pp = csaps(pts(:,1),pts(:,2),0.0001);
+% Plot spline
+%yy = ppval(pp, linspace(0,400,101));
+hold on;
+%plot(linspace(0,400,101), yy(1,:));
+fnplt(pp);
 
 figure;
 imshow(red);
+
+% Find dervatives and curvature
+d1 = fnder(pp);
+d2 = fnder(d1);
+
+% Total hack, passing callback from image plot to obscured parent axes.
+ax_callback = @(h,e)(disp(e.IntersectionPoint(1)));
+set(ax,'ButtonDownFcn',ax_callback);
+set(ima,'ButtonDownFcn',@(h,e)(ax_callback(h,e)));
 
